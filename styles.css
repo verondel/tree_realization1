@@ -30,9 +30,19 @@ body {
   margin: 0.5rem auto;
   background: #000;
 } */
-button {
-  display: flex;
+/* #button_center {
+  float: left
 }
+#button_left {
+  float: left
+}
+#button_right{
+  float: left
+} */
+
+.box div { 
+  width:90px; display:inline-block; }
+
 
 .card {
   display: flex;
