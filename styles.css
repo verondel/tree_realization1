@@ -1,0 +1,65 @@
+/* :root {
+  box-sizing: border-box;
+  font-size: calc(0.5em + 1vw); /* 1% от видимого поля
+} */
+
+* , ::before, ::after {
+  box-sizing: inherit;
+} */
+
+* {
+  padding: 0;
+  margin: 0;
+  /* border: 0; */
+  box-sizing: border-box;
+}
+
+/* body {
+  background-color: #eee;
+  font-family: Helvetica, Arial, sans-serif;
+} */
+
+body {
+  background: #666;
+}
+
+/* контейнер НЕ ВИДНО (просто потому, создан на всякий случай) */
+/* .container { 
+  max-width: 800px;
+  height: 800px;
+  margin: 0.5rem auto;
+  background: #000;
+} */
+/* #button_center {
+  float: left
+}
+#button_left {
+  float: left
+}
+#button_right{
+  float: left
+} */
+
+.box div { 
+  width:90px; display:inline-block; }
+
+
+.card {
+  display: flex;
+
+  max-width: 800px;
+  height: 800px;
+  margin: 0.5rem auto;
+
+  justify-content: center;
+  height: 800px;
+  border-radius: 4px;
+  background: #fff;
+  padding: 1rem;
+  box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+canvas {
+  border: 1px solid black;
+}
+
