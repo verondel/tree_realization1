@@ -1,7 +1,7 @@
 const xStep = 200
 const yStep = 100
-// let xFirst = 600
-// let yFirst = 1000
+let xFirst = 600
+let yFirst = 40
 
 // let xLast = -1 // начальный x который мы будем перезаписывать и хранить последнее значение
 // let yLast = -1
@@ -81,60 +81,106 @@ class Node { // конкретные записи
   paint_circle_first (id, parent_l, parent_c, parent_r) {
     ctx.beginPath()
       // ctx.arc(DPI_WIDTH/2, PADDING, 10, 0, 360, false) // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
-      ctx.arc(DPI_WIDTH/2, 171, 10, 0, 360, false) // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
+      ctx.arc(DPI_WIDTH/2, PADDING, 10, 0, 360, false) // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
       ctx.fill()
     ctx.closePath()
     console.log('DPI_W', DPI_WIDTH, ' P', PADDING)
   }
 
   paint_circle (id, parent_l, parent_c, parent_r) {
-    ctx.beginPath()
-      // ctx.arc(DPI_WIDTH/2, PADDING, 10, 0, 360, false) // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
-      ctx.arc(DPI_WIDTH/2, (this.id*136), 10, 0, 360, false) // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
+
+    if (this.parent_c == 1){
+      ctx.beginPath()
+        ctx.arc(DPI_WIDTH/2, (this.id*110) - PADDING*2, 10, 0, 360, false) // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
+        ctx.fill()
+      ctx.closePath()
+      console.log(this.id , (this.id*110)- PADDING*2)
+    } 
+    if (this.parent_l == 1 ){
+      ctx.beginPath()
+      ctx.arc(DPI_WIDTH/2 - 200, (this.id*110) - PADDING*2, 10, 0, 360, false) // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
       ctx.fill()
-    ctx.closePath()
-    console.log(this.id , (this.id*136))
+      ctx.closePath()
+      console.log(this.id , (this.id*110)- PADDING*2)
+    }
+    if (this.parent_r == 1) {
+      ctx.beginPath()
+      ctx.arc(DPI_WIDTH/2 + 200, (this.id*110) - PADDING*2, 10, 0, 360, false) // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
+      ctx.fill()
+      ctx.closePath()
+      console.log(this.id , (this.id*110)- PADDING*2)
+    }
   }
 
   paint_line_to (id, parent_l, parent_c, parent_r) {
+  ctx.beginPath()
     ctx.lineWidth = 4 // толщина линии
     ctx.strokeStyle = 'green' // цвет графики
+    
 
-    ctx.lineTo(xFirst, DPI_HEIGHT - PADDING - (yFirst + xStep)) 
-    // DPI_HEIGHT - PADDING - y * yRatio
-    // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
-    
-    xFirst = xFirst
-    yFirst = yFirst + xStep
-    // console.log(xLast, yLast)
-    
-    ctx.stroke() // отрисуй из ОП мои маракули 
+    if (this.parent_c == 1) {
+      ctx.moveTo(DPI_WIDTH/2, (this.id-1)*110 - PADDING*2)
+      ctx.lineTo(DPI_WIDTH/2, (this.id-1)*110 - PADDING*2+yStep);  // DPI_HEIGHT - PADDING - y * yRatio // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
+      ctx.stroke() // отрисуй из ОП мои маракули 
+    }
+
+    if (this.parent_l == 1) {
+      // налево
+      ctx.moveTo(DPI_WIDTH/2, (this.id-1)*110 - PADDING*2)
+      ctx.lineTo(DPI_WIDTH/2-200, (this.id-1)*110 - PADDING*2);  // DPI_HEIGHT - PADDING - y * yRatio // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
+      ctx.stroke() // отрисуй из ОП мои маракули 
+
+      // вниз
+      ctx.moveTo(DPI_WIDTH/2-200, (this.id-1)*110 - PADDING*2)
+      ctx.lineTo(DPI_WIDTH/2-200, (this.id-1)*110 - PADDING*2+yStep);  // DPI_HEIGHT - PADDING - y * yRatio // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
+      ctx.stroke() // отрисуй из ОП мои маракули 
+    }
+
+    if (this.parent_r == 1) {
+      // налево
+      ctx.moveTo(DPI_WIDTH/2, (this.id-1)*110 - PADDING*2)
+      ctx.lineTo(DPI_WIDTH/2+200, (this.id-1)*110 - PADDING*2);  // DPI_HEIGHT - PADDING - y * yRatio // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
+      ctx.stroke() // отрисуй из ОП мои маракули 
+
+      // вниз
+      ctx.moveTo(DPI_WIDTH/2+200, (this.id-1)*110 - PADDING*2)
+      ctx.lineTo(DPI_WIDTH/2+200, (this.id-1)*110 - PADDING*2+yStep);  // DPI_HEIGHT - PADDING - y * yRatio // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
+      ctx.stroke() // отрисуй из ОП мои маракули 
+    }
+
+
+
+
+    // if (this.parent_l == 1) {
+    //   ctx.moveTo(xFirst, yFirst)
+    //   ctx.lineTo(xFirst, yFirst + yStep);  // DPI_HEIGHT - PADDING - y * yRatio // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
+    //   ctx.stroke() // отрисуй из ОП мои маракули 
+    //   xFirst = xFirst    // перезаписываем переменные 
+    //   yFirst = yFirst + yStep
+    // }
   ctx.closePath() // конец работы канваса
   }
 } 
 
-let node_1 = new Node(1, -1, -1, -1)
+let node_1 = new Node(1, -1, -1, -1) // начало 
 node_1.paint_circle_first()
 
-let node_2 = new Node(2, -1, 1, -1)
-// node_2.paint_circle()
-//node_2.paint_line_to()
+let node_2 = new Node(2, 0, 1, 0) // середина 
 node_2.paint_circle()
+node_2.paint_line_to()
 
-let node_3 = new Node(3, -1, 1, -1)
+let node_3 = new Node(3, 1, 1, 1) // слева
 node_3.paint_circle()
+node_3.paint_line_to()
 
-// let node_4 = new Node(4, -1, 1, -1)
-// node_3.paint_circle()
+let node_4 = new Node(4, -1, 1, -1) // справа
+node_4.paint_circle()
 
-// let node_5 = new Node(5, -1, 1, -1)
-// node_3.paint_circle()
+let node_5 = new Node(5, -1, 1, -1)
+node_5.paint_circle()
 
 
 // общие координаты 
-
-
-
 /*
 class Tree { 
   category = [ 'm', 'k', 'med']
