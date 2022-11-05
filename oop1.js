@@ -73,121 +73,152 @@ let branch_1 = new Branch([node_1,node_2,node_3], 'm')
 */
 
 class Node { // конкретные записи
-  constructor(id, parent_l, parent_c, parent_r ) {
+  constructor(id, parent_l, parent_c, parent_r, right, level) {
     this.id = id;
+    this.right = right;
+    this.level = level;
     this.parent_c = parent_c
     this.parent_l = parent_l
     this.parent_r = parent_r
   }
   
 
-  paint_circle_first (id, parent_l, parent_c, parent_r) {
-    ctx.beginPath()
-      // ctx.arc(DPI_WIDTH/2, PADDING, 10, 0, 360, false) // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
-      ctx.strokeStyle = "red";
-      ctx.fillStyle = "white";
-      ctx.lineWidth = "4"
-      ctx.arc(DPI_WIDTH/2, PADDING, 20, 0, 360, false); // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
-      console.log('First circle', DPI_WIDTH/2, PADDING);
-      ctx.fill();
-      ctx.stroke();
+  // paint_circle_first (parent_l, parent_c, parent_r) {
+  //   ctx.beginPath()
+  //     // ctx.arc(DPI_WIDTH/2, PADDING, 10, 0, 360, false) // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
+  //     ctx.strokeStyle = "red";
+  //     ctx.fillStyle = "white";
+  //     ctx.lineWidth = "4"
+  //     ctx.arc(DPI_WIDTH/2, PADDING, 20, 0, 360, false); // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
+  //     console.log('First circle', DPI_WIDTH/2, PADDING);
+  //     ctx.fill();
+  //     ctx.stroke();
       
-    ctx.closePath()
-    //console.log('DPI_W', DPI_WIDTH, ' P', PADDING)
-  }
+  //   ctx.closePath()
+  //   //console.log('DPI_W', DPI_WIDTH, ' P', PADDING)
+  // }
 
-  paint_circle (id, parent_l, parent_c, parent_r) {
+  paint_circle (parent_l, parent_c, parent_r, level, right) {
+    ctx.strokeStyle = "green";
+    ctx.fillStyle = "white";
+    ctx.lineWidth = "4"
+
     if (this.parent_c == 1){
       ctx.beginPath();
-      ctx.strokeStyle = "green";
-      ctx.fillStyle = "white";
-        ctx.arc(DPI_WIDTH/2, ((this.id-1)*110+ PADDING) , 20, 0, 360, false);
+        ctx.arc(DPI_WIDTH/2 + 200*this.right, ((this.level-1)*110+PADDING) , 20, 0, 360, false);
         ctx.fill();
         ctx.stroke();
       ctx.closePath();
-      //console.log('id', this.id , ((this.id-1)*110+PADDING))
     } 
-    if (this.parent_l == 1 ){
+    else if (this.parent_r == 1 ){
       ctx.beginPath()
-        ctx.arc(DPI_WIDTH/2 - 200, ((this.id-1)*110+PADDING), 20, 0, 360, false) 
+        ctx.arc(DPI_WIDTH/2 + 200*this.right, ((this.level-1)*110+PADDING), 20, 0, 360, false) 
         ctx.fill();
         ctx.stroke()
       ctx.closePath()
-      //console.log(this.id , (this.id*110)- PADDING*2)
     }
-    if (this.parent_r == 1) {
+    else if (this.parent_l == 1) {
       ctx.beginPath()
-        ctx.arc(DPI_WIDTH/2 + 200, ((this.id-1)*110+PADDING), 20, 0, 360, false) // //// (this.id*110) - PADDING*2
+        ctx.arc(DPI_WIDTH/2 + 200*this.right, ((this.level-1)*110+PADDING), 20, 0, 360, false) // //// (this.level*110) - PADDING*2
         ctx.fill();
         ctx.stroke()
       ctx.closePath()
-      //console.log(this.id , (this.id*110)- PADDING*2)
+    }
+    else{
+      ctx.beginPath()
+        ctx.arc(DPI_WIDTH/2 + 200*this.right, ((this.level-1)*110+PADDING), 20, 0, 360, false)
+        ctx.fill();
+        ctx.stroke()
+      ctx.closePath()
     }
   }
 
-  paint_line_to (id, parent_l, parent_c, parent_r) {
+  paint_line_to (parent_l, parent_c, parent_r, level, right) {
   ctx.beginPath()
     ctx.lineWidth = 4 // толщина линии
     ctx.strokeStyle = 'green' // цвет графики
     
 
     if (this.parent_c == 1) {
-      ctx.moveTo(DPI_WIDTH/2, PADDING + (this.id-2)*yStep + 22 ) // 22, чтобы не накладывался на круг
-      ctx.lineTo(DPI_WIDTH/2, PADDING+(this.id-2)*yStep+yStep - 22);  // DPI_HEIGHT - PADDING - y * yRatio // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
-      ctx.stroke() // отрисуй из ОП мои маракули 
-    }
+      ctx.moveTo(DPI_WIDTH/2 + 200*this.right, PADDING + (this.level-2)*yStep + 22 ) // 22, чтобы не накладывался на круг
+      ctx.lineTo(DPI_WIDTH/2 + 200*this.right, PADDING + (this.level-1)*yStep - 22);  // DPI_HEIGHT - PADDING - y * yRatio // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
+      ctx.stroke() 
 
-    if (this.parent_l == 1) {
+      if (this.parent_l == 1){ 
+        // вниз
+        ctx.moveTo(DPI_WIDTH/2 + (this.right-1)*200, PADDING + (this.level-2)*yStep + 22)
+        ctx.lineTo(DPI_WIDTH/2 + (this.right-1)*200, PADDING + (this.level-1)*yStep); 
+        ctx.stroke()
+        // направо
+        ctx.moveTo(DPI_WIDTH/2 + (this.right-1)*200, PADDING + (this.level-1)*yStep ) //(this.level-1)*110 - PADDING*2
+        ctx.lineTo(DPI_WIDTH/2 + (this.right)*200 - 22, PADDING + (this.level-1)*yStep); // (this.level-1)*110 - PADDING*2 
+        ctx.stroke() 
+        }
+      if (this.parent_r == 1){ 
+        // вниз
+        ctx.moveTo(DPI_WIDTH/2 + (this.right+1)*200, PADDING + (this.level-2)*yStep + 22)
+        ctx.lineTo(DPI_WIDTH/2 + (this.right+1)*200, PADDING + (this.level-1)*yStep); 
+        ctx.stroke()
+        // налево
+        ctx.moveTo(DPI_WIDTH/2 + (this.right+1)*200, PADDING + (this.level-1)*yStep ) //(this.level-1)*110 - PADDING*2
+        ctx.lineTo(DPI_WIDTH/2 + (this.right)*200 + 22, PADDING + (this.level-1)*yStep); // (this.level-1)*110 - PADDING*2 
+        ctx.stroke() 
+      } 
+
+    }else if (this.parent_r == 1) {
       // налево
-      ctx.moveTo(DPI_WIDTH/2 - 22,  PADDING + (this.id-2)*yStep ) //(this.id-1)*110 - PADDING*2
-      ctx.lineTo(DPI_WIDTH/2-200, PADDING + (this.id-2)*yStep); // (this.id-1)*110 - PADDING*2 
+      ctx.moveTo(DPI_WIDTH/2 - 22 + 200*(this.right+1),  PADDING + (this.level-2)*yStep ) //(this.level-1)*110 - PADDING*2
+      ctx.lineTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep); // (this.level-1)*110 - PADDING*2 
       ctx.stroke() 
-
       // вниз
-      ctx.moveTo(DPI_WIDTH/2-200, PADDING + (this.id-2)*yStep)
-      ctx.lineTo(DPI_WIDTH/2-200, PADDING + (this.id-2)*yStep+yStep - 22); 
+      ctx.moveTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep)
+      ctx.lineTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep+yStep - 22); 
       ctx.stroke()  
-    }
 
-    if (this.parent_r == 1) {
-      // право
-      ctx.moveTo(DPI_WIDTH/2 + 22,  PADDING + (this.id-2)*yStep ) //(this.id-1)*110 - PADDING*2
-      ctx.lineTo(DPI_WIDTH/2+200, PADDING + (this.id-2)*yStep); // (this.id-1)*110 - PADDING*2 
+    }else if (this.parent_l == 1) {
+      // направо
+      ctx.moveTo(DPI_WIDTH/2 + 22 + 200*(this.right-1),  PADDING + (this.level-2)*yStep ) //(this.level-1)*110 - PADDING*2
+      ctx.lineTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep); // (this.level-1)*110 - PADDING*2 
       ctx.stroke() 
-
       // вниз
-      ctx.moveTo(DPI_WIDTH/2+200, PADDING + (this.id-2)*yStep)
-      ctx.lineTo(DPI_WIDTH/2+200, PADDING + (this.id-2)*yStep+yStep - 22); 
+      ctx.moveTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep)
+      ctx.lineTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep+yStep - 22); 
       ctx.stroke() 
     }
-
-    // if (this.parent_l == 1) {
-    //   ctx.moveTo(xFirst, yFirst)
-    //   ctx.lineTo(xFirst, yFirst + yStep);  // DPI_HEIGHT - PADDING - y * yRatio // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
-    //   ctx.stroke() // отрисуй из ОП мои маракули 
-    //   xFirst = xFirst    // перезаписываем переменные 
-    //   yFirst = yFirst + yStep
-    // }
   ctx.closePath() // конец работы канваса
   }
 } 
 
-let node_1 = new Node(1, -1, -1, -1) // начало 
-node_1.paint_circle_first()
+let node_mass = [
+  new Node(1, 0, 0, 0, 0, 1), 
+  new Node(2, 0, 1, 0, 0, 2),
+  new Node(3, 1, 0, 0, 1, 3),
+  new Node(4, 0, 1, 0, 0, 3),
+  new Node(5, 0, 0, 1, -1, 4),
+  new Node(6, 0, 1, 1, 0, 4), // 330 центр
+  new Node(7, 0, 1, 0, 0, 5),
+  new Node(8, 0, 1, 0, -1, 5),
+  new Node(9, 1, 0, 0, 1, 6),
+  new Node(10, 1, 1, 0, 0, 6),
+  new Node(11, 1, 1, 0, 1, 7),
+  new Node(12, 0, 0, 0, 2, 3),
+  new Node(13, 1, 0, 0, 2, 7),
 
-let node_2 = new Node(2, 0, 1, 0) // середина 
-node_2.paint_circle()
-node_2.paint_line_to()
+]
 
-let node_3 = new Node(3, 1, 1, 1) // слева
-node_3.paint_circle()
-node_3.paint_line_to()
+function render(node_mass){
+  for (let node of node_mass){
+    node.paint_circle()
+    node.paint_line_to()
+  }
+}
 
-let node_4 = new Node(4, -1, 1, -1) // справа
-node_4.paint_circle()
+render(node_mass)
 
-let node_5 = new Node(5, -1, 1, -1)
-node_5.paint_circle()
+
+// let node_8 = new Node(8, 1, 0, 1, -2, 5) // -2
+// node_8.paint_circle()
+// node_8.paint_line_to()
 
 
 // общие координаты 
