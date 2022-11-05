@@ -48,11 +48,11 @@ body {
   display: flex;
 
   max-width: 800px;
-  height: 800px;
+  height: 865px;
   margin: 0.5rem auto;
 
   justify-content: center;
-  height: 800px;
+  height: 900px;
   border-radius: 4px;
   background: #fff;
   padding: 1rem;
