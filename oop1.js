@@ -73,62 +73,43 @@ let branch_1 = new Branch([node_1,node_2,node_3], 'm')
 */
 
 class Node { // конкретные записи
-  constructor(id, parent_l, parent_c, parent_r, right, level) {
+  constructor(id, parent_l, parent_c, parent_r, right, level, type) {
     this.id = id;
     this.right = right;
     this.level = level;
     this.parent_c = parent_c
     this.parent_l = parent_l
     this.parent_r = parent_r
+    this.type = type
   }
-  
 
-  // paint_circle_first (parent_l, parent_c, parent_r) {
-  //   ctx.beginPath()
-  //     // ctx.arc(DPI_WIDTH/2, PADDING, 10, 0, 360, false) // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
-  //     ctx.strokeStyle = "red";
-  //     ctx.fillStyle = "white";
-  //     ctx.lineWidth = "4"
-  //     ctx.arc(DPI_WIDTH/2, PADDING, 20, 0, 360, false); // центрX, центрY, радиус px, начало угла, конец угла, против часовой?)
-  //     console.log('First circle', DPI_WIDTH/2, PADDING);
-  //     ctx.fill();
-  //     ctx.stroke();
-      
-  //   ctx.closePath()
-  //   //console.log('DPI_W', DPI_WIDTH, ' P', PADDING)
-  // }
-
-  paint_circle (parent_l, parent_c, parent_r, level, right) {
+  paint_circle (parent_l, parent_c, parent_r, level, right, type) {
     ctx.strokeStyle = "green";
     ctx.fillStyle = "white";
     ctx.lineWidth = "4"
 
     if (this.parent_c == 1){
       ctx.beginPath();
-        ctx.arc(DPI_WIDTH/2 + 200*this.right, ((this.level-1)*110+PADDING) , 20, 0, 360, false);
-        ctx.fill();
-        ctx.stroke();
+        ctx.arc(DPI_WIDTH/2 + xStep*this.right, ((this.level-1)*110+PADDING) , 20, 0, 360, false);
+        draw_type(DPI_WIDTH/2 + xStep*this.right, ((this.level-1)*110+PADDING), this.type);
       ctx.closePath();
     } 
     else if (this.parent_r == 1 ){
       ctx.beginPath()
-        ctx.arc(DPI_WIDTH/2 + 200*this.right, ((this.level-1)*110+PADDING), 20, 0, 360, false) 
-        ctx.fill();
-        ctx.stroke()
+        ctx.arc(DPI_WIDTH/2 + xStep*this.right, ((this.level-1)*110+PADDING), 20, 0, 360, false) 
+        draw_type(DPI_WIDTH/2 + xStep*this.right, ((this.level-1)*110+PADDING), this.type);
       ctx.closePath()
     }
     else if (this.parent_l == 1) {
       ctx.beginPath()
-        ctx.arc(DPI_WIDTH/2 + 200*this.right, ((this.level-1)*110+PADDING), 20, 0, 360, false) // //// (this.level*110) - PADDING*2
-        ctx.fill();
-        ctx.stroke()
+        ctx.arc(DPI_WIDTH/2 + xStep*this.right, ((this.level-1)*110+PADDING), 20, 0, 360, false) // //// (this.level*110) - PADDING*2
+        draw_type(DPI_WIDTH/2 + xStep*this.right, ((this.level-1)*110+PADDING) ,this.type);
       ctx.closePath()
     }
     else{
       ctx.beginPath()
-        ctx.arc(DPI_WIDTH/2 + 200*this.right, ((this.level-1)*110+PADDING), 20, 0, 360, false)
-        ctx.fill();
-        ctx.stroke()
+        ctx.arc(DPI_WIDTH/2 + xStep*this.right, ((this.level-1)*110+PADDING), 20, 0, 360, false)
+        draw_type(DPI_WIDTH/2 + xStep*this.right, ((this.level-1)*110+PADDING) ,this.type);
       ctx.closePath()
     }
   }
@@ -137,52 +118,52 @@ class Node { // конкретные записи
   ctx.beginPath()
     ctx.lineWidth = 4 // толщина линии
     ctx.strokeStyle = 'green' // цвет графики
-    
+    ctx.setLineDash([]);
 
     if (this.parent_c == 1) {
-      ctx.moveTo(DPI_WIDTH/2 + 200*this.right, PADDING + (this.level-2)*yStep + 22 ) // 22, чтобы не накладывался на круг
-      ctx.lineTo(DPI_WIDTH/2 + 200*this.right, PADDING + (this.level-1)*yStep - 22);  // DPI_HEIGHT - PADDING - y * yRatio // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
+      ctx.moveTo(DPI_WIDTH/2 + xStep*this.right, PADDING + (this.level-2)*yStep + 22 ) // 22, чтобы не накладывался на круг
+      ctx.lineTo(DPI_WIDTH/2 + xStep*this.right, PADDING + (this.level-1)*yStep - 22);  // DPI_HEIGHT - PADDING - y * yRatio // * yRatio) в оперативной нарисовали (вычисляются координаты для линий)
       ctx.stroke() 
 
       if (this.parent_l == 1){ 
         // вниз
-        ctx.moveTo(DPI_WIDTH/2 + (this.right-1)*200, PADDING + (this.level-2)*yStep + 22)
-        ctx.lineTo(DPI_WIDTH/2 + (this.right-1)*200, PADDING + (this.level-1)*yStep); 
+        ctx.moveTo(DPI_WIDTH/2 + (this.right-1)*xStep, PADDING + (this.level-2)*yStep + 22)
+        ctx.lineTo(DPI_WIDTH/2 + (this.right-1)*xStep, PADDING + (this.level-1)*yStep); 
         ctx.stroke()
         // направо
-        ctx.moveTo(DPI_WIDTH/2 + (this.right-1)*200, PADDING + (this.level-1)*yStep ) //(this.level-1)*110 - PADDING*2
-        ctx.lineTo(DPI_WIDTH/2 + (this.right)*200 - 22, PADDING + (this.level-1)*yStep); // (this.level-1)*110 - PADDING*2 
+        ctx.moveTo(DPI_WIDTH/2 + (this.right-1)*xStep, PADDING + (this.level-1)*yStep ) //(this.level-1)*110 - PADDING*2
+        ctx.lineTo(DPI_WIDTH/2 + (this.right)*xStep - 22, PADDING + (this.level-1)*yStep); // (this.level-1)*110 - PADDING*2 
         ctx.stroke() 
         }
       if (this.parent_r == 1){ 
         // вниз
-        ctx.moveTo(DPI_WIDTH/2 + (this.right+1)*200, PADDING + (this.level-2)*yStep + 22)
-        ctx.lineTo(DPI_WIDTH/2 + (this.right+1)*200, PADDING + (this.level-1)*yStep); 
+        ctx.moveTo(DPI_WIDTH/2 + (this.right+1)*xStep, PADDING + (this.level-2)*yStep + 22)
+        ctx.lineTo(DPI_WIDTH/2 + (this.right+1)*xStep, PADDING + (this.level-1)*yStep); 
         ctx.stroke()
         // налево
-        ctx.moveTo(DPI_WIDTH/2 + (this.right+1)*200, PADDING + (this.level-1)*yStep ) //(this.level-1)*110 - PADDING*2
-        ctx.lineTo(DPI_WIDTH/2 + (this.right)*200 + 22, PADDING + (this.level-1)*yStep); // (this.level-1)*110 - PADDING*2 
+        ctx.moveTo(DPI_WIDTH/2 + (this.right+1)*xStep, PADDING + (this.level-1)*yStep ) //(this.level-1)*110 - PADDING*2
+        ctx.lineTo(DPI_WIDTH/2 + (this.right)*xStep + 22, PADDING + (this.level-1)*yStep); // (this.level-1)*110 - PADDING*2 
         ctx.stroke() 
       } 
 
     }else if (this.parent_r == 1) {
       // налево
-      ctx.moveTo(DPI_WIDTH/2 - 22 + 200*(this.right+1),  PADDING + (this.level-2)*yStep ) //(this.level-1)*110 - PADDING*2
-      ctx.lineTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep); // (this.level-1)*110 - PADDING*2 
+      ctx.moveTo(DPI_WIDTH/2 - 22 + xStep*(this.right+1),  PADDING + (this.level-2)*yStep ) //(this.level-1)*110 - PADDING*2
+      ctx.lineTo(DPI_WIDTH/2 + this.right*xStep, PADDING + (this.level-2)*yStep); // (this.level-1)*110 - PADDING*2 
       ctx.stroke() 
       // вниз
-      ctx.moveTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep)
-      ctx.lineTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep+yStep - 22); 
+      ctx.moveTo(DPI_WIDTH/2 + this.right*xStep, PADDING + (this.level-2)*yStep)
+      ctx.lineTo(DPI_WIDTH/2 + this.right*xStep, PADDING + (this.level-2)*yStep+yStep - 22); 
       ctx.stroke()  
 
     }else if (this.parent_l == 1) {
       // направо
-      ctx.moveTo(DPI_WIDTH/2 + 22 + 200*(this.right-1),  PADDING + (this.level-2)*yStep ) //(this.level-1)*110 - PADDING*2
-      ctx.lineTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep); // (this.level-1)*110 - PADDING*2 
+      ctx.moveTo(DPI_WIDTH/2 + 22 + xStep*(this.right-1),  PADDING + (this.level-2)*yStep ) //(this.level-1)*110 - PADDING*2
+      ctx.lineTo(DPI_WIDTH/2 + this.right*xStep, PADDING + (this.level-2)*yStep); // (this.level-1)*110 - PADDING*2 
       ctx.stroke() 
       // вниз
-      ctx.moveTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep)
-      ctx.lineTo(DPI_WIDTH/2 + this.right*200, PADDING + (this.level-2)*yStep+yStep - 22); 
+      ctx.moveTo(DPI_WIDTH/2 + this.right*xStep, PADDING + (this.level-2)*yStep)
+      ctx.lineTo(DPI_WIDTH/2 + this.right*xStep, PADDING + (this.level-2)*yStep+yStep - 22); 
       ctx.stroke() 
     }
   ctx.closePath() // конец работы канваса
@@ -190,21 +171,66 @@ class Node { // конкретные записи
 } 
 
 let node_mass = [
-  new Node(1, 0, 0, 0, 0, 1), 
-  new Node(2, 0, 1, 0, 0, 2),
-  new Node(3, 1, 0, 0, 1, 3),
-  new Node(4, 0, 1, 0, 0, 3),
-  new Node(5, 0, 0, 1, -1, 4),
-  new Node(6, 0, 1, 1, 0, 4), // 330 центр
-  new Node(7, 0, 1, 0, 0, 5),
-  new Node(8, 0, 1, 0, -1, 5),
-  new Node(9, 1, 0, 0, 1, 6),
-  new Node(10, 1, 1, 0, 0, 6),
-  new Node(11, 1, 1, 0, 1, 7),
-  new Node(12, 0, 0, 0, 2, 3),
-  new Node(13, 1, 0, 0, 2, 7),
+  new Node(1, 0, 0, 0, 0, 1, 'dev'), 
+  new Node(2, 0, 1, 0, 0, 2, 'i'),
+  new Node(3, 1, 0, 0, 1, 3, 'dev'),
+  new Node(4, 0, 1, 0, 0, 3, 's'),
+  new Node(5, 0, 0, 1, -1, 4, 's'),
+  new Node(6, 0, 1, 1, 0, 4, 'dev'), // 330 центр
+  new Node(7, 0, 1, 0, 0, 5, 'dev'),
+  new Node(8, 0, 1, 0, -1, 5, 'dev'),
+  new Node(9, 1, 0, 0, 1, 6, 'dev'),
+  new Node(10, 1, 1, 0, 0, 6, 'dl'),
+  new Node(11, 1, 1, 0, 1, 7, 'dl'),
+  new Node(12, 0, 0, 0, 2, 3, 'i'),
+  new Node(13, 1, 0, 0, 2, 7, 'i'),
 
 ]
+
+/*
+ * Обозначения типа кружка
+ * разработка - development - dev
+ * идея       - idea        - i
+ * успех      - success     - s
+ * тупик      - deadlock    - dl
+ * 
+*/
+
+
+function draw_type(x,y,type) {
+  switch(type){
+    case('dev'):
+      ctx.fill()
+      ctx.stroke();
+      break;
+    case('i'):
+      ctx.setLineDash([10, 6]);
+      ctx.fill();
+      ctx.stroke();
+      ctx.setLineDash([]);
+      break;
+    case('s'):
+      ctx.lineCap = "round" 
+      ctx.moveTo(x-12,y);
+      ctx.lineTo(x-2, y+12);
+      ctx.lineTo(x+12, y-5);
+      ctx.fill();
+      ctx.stroke();
+      ctx.lineCap = "butt"
+      break;
+    case('dl'):
+      ctx.lineCap = "round"
+      ctx.moveTo(x - 9, y - 9);
+      ctx.lineTo(x + 9, y + 9);
+      ctx.moveTo(x + 9, y - 9);
+      ctx.lineTo(x - 9, y + 9);
+      ctx.fill();
+      ctx.stroke();
+      ctx.lineCap = "butt"
+      break;
+  }
+}
+
 
 function render(node_mass){
   for (let node of node_mass){
@@ -214,6 +240,55 @@ function render(node_mass){
 }
 
 render(node_mass)
+
+ctx.beginPath();
+  //ctx.setLineDash([10, 6]); // длинна палочки, пропуска
+  ctx.beginPath();
+  ctx.arc(100, 60, 20, 0, Math.PI * 2);
+ctx.closePath();
+ctx.fill()
+ctx.stroke();
+
+// ----------- TICK 100,60 - центр окружности
+// ctx.beginPath()
+//   ctx.setLineDash([]); 
+//   ctx.lineCap = "round" 
+
+//   ctx.moveTo(100-12,60);
+//   ctx.lineTo(100-2, 60+12);
+//   ctx.lineTo(100+12, 60-5);
+
+//   ctx.lineWidth = 4;
+//   ctx.strokeStyle = 'green';
+//   ctx.stroke();   
+// ctx.closePath()
+
+//-------------
+
+function drawX(x, y) { // x, y - центр окружности
+  ctx.beginPath();
+  ctx.setLineDash([]); 
+  ctx.lineCap = "round"
+
+  ctx.moveTo(x - 9, y - 9);
+  ctx.lineTo(x + 9, y + 9);
+
+  ctx.moveTo(x + 9, y - 9);
+  ctx.lineTo(x - 9, y + 9);
+  ctx.stroke();
+}
+
+drawX(100,60)
+
+
+//-- TICK 2
+// ctx.beginPath();
+// ctx.moveTo(30,50);
+// ctx.lineTo(45,70);
+// ctx.lineTo(65,40);
+// ctx.lineWidth = 4;
+// ctx.strokeStyle = 'green';
+// ctx.stroke();    
 
 
 // let node_8 = new Node(8, 1, 0, 1, -2, 5) // -2
